@@ -27,7 +27,7 @@ for i, layer in enumerate(image):
         count = temp
         layer_index = i
 
-print('ans:',image[layer_index].count(1) * image[layer_index].count(2))
+print('ans1:',image[layer_index].count(1) * image[layer_index].count(2))
 
 ################ Part 2 #################
 
