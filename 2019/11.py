@@ -31,16 +31,18 @@ class IntcodeComp:
         self.inst = instructions
         self.rb = 0
         
-    def compute(self,in_val=None):
+    def compute(self,in_val):
         out = ''
         while self.i < len(self.inst):
             m = []
             d_in = str(self.inst[self.i]).rjust(5,'0')
             opcode = d_in[3:]
+            print(opcode)
             m.append(int(d_in[2]))
             m.append(int(d_in[1]))
             m.append(int(d_in[0]))
             t, v = position(self.inst,self.i,m,self.rb)
+            print(t,v)
             if opcode == '01':
                 self.inst[t[2]] = v[0] + v[1]
                 self.i += 4
@@ -53,6 +55,8 @@ class IntcodeComp:
             elif opcode == '04':
                 out = v[0]
                 self.i += 2
+                #k = list(self.inst.items())
+                #print(k[:150])
                 break
             elif opcode == '05':
                 if v[0] != 0:
@@ -80,12 +84,8 @@ class IntcodeComp:
 
 ################ Part 1 #################
 
-directions = {
-    0:(0,1),
-    1:(1,0),
-    2:(0,-1),
-    3:(-1,0)
-} #0=N,1=E,2=S,3=W
+#directions = [(1, 0), (0, 1), (-1, 0), (0, -1)] #0=N,1=E,2=S,3=W
+directions = [(0, -1), (1, 0), (0, 1), (-1, 0)] #0=N,1=E,2=S,3=W
 
 class Robot:
     def __init__(self):
@@ -94,26 +94,54 @@ class Robot:
         self.y = 0
 
     def turn(self,direction):
-        print(direction)
-        if direction:
+        #print(turn,self.d)
+        #print('direction',direction)
+        if direction == 1:
+            #print('1b',self.d)
             self.d = (self.d + 1) % 4
-        else:
-            self.d = (self.d - 1) % 4
-        return(self.d)
+            #print('1a',self.d)
+        elif direction == 0:
+            #print('0b',self.d)
+            self.d = (self.d - 1 + 4) % 4
+            #print('0a',self.d)
 
     def move(self):
-        self.x += directions[self.d][0]
-        self.y += directions[self.d][1]
-        return(self.x,self.y)
+        self.x = self.x + directions[self.d][0]
+        self.y = self.y + directions[self.d][1]
+        return ((self.x,self.y))
 
-visited = {}
+painted = {(0,0):0}
+l = (0,0)
 
 computer = IntcodeComp(instructions.copy())
 robot = Robot()
 
-print(computer.compute())
-robot.turn(computer.compute())
-print(robot.move())
+#while True:
+for i in range(3):
+    
+    a = painted[l] if l in painted else 0
+    print('comp in',a)
+    #print('starting pos',robot.x,robot.y,robot.d)
+    #print(l,robot.d,painted)
+
+    o1 = computer.compute(a)
+    o2 = computer.compute(a)
+    #print('output of comp',o1,o2)
+    if o1 == None:
+        break
+    else:
+        #print('l,c',l,c)
+        painted[l] = o1
+
+    robot.turn(o2)
+    l = robot.move()
+    print('ending pos',robot.x,robot.y,robot.d,painted)
+    print('#### NEXT #####')
+    
+
+print(len(painted))
+#print(painted)
+
 
 #print('ans1:',computer.compute(1))
 
