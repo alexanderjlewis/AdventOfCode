@@ -1,5 +1,6 @@
 from pathlib import Path
 from time import time
+from PIL import Image
 
 t0 = time()
 
@@ -34,15 +35,13 @@ class IntcodeComp:
     def compute(self,in_val):
         out = ''
         while self.i < len(self.inst):
-            m = []
+            ms = []
             d_in = str(self.inst[self.i]).rjust(5,'0')
             opcode = d_in[3:]
-            print(opcode)
-            m.append(int(d_in[2]))
-            m.append(int(d_in[1]))
-            m.append(int(d_in[0]))
-            t, v = position(self.inst,self.i,m,self.rb)
-            print(t,v)
+            ms.append(int(d_in[2]))
+            ms.append(int(d_in[1]))
+            ms.append(int(d_in[0]))
+            t, v = position(self.inst,self.i,ms,self.rb)
             if opcode == '01':
                 self.inst[t[2]] = v[0] + v[1]
                 self.i += 4
@@ -50,13 +49,11 @@ class IntcodeComp:
                 self.inst[t[2]] = v[0] * v[1]
                 self.i += 4
             elif opcode == '03':
-                self.inst[t[2]] = in_val
+                self.inst[t[0]] = in_val
                 self.i += 2
             elif opcode == '04':
                 out = v[0]
                 self.i += 2
-                #k = list(self.inst.items())
-                #print(k[:150])
                 break
             elif opcode == '05':
                 if v[0] != 0:
@@ -92,60 +89,61 @@ class Robot:
         self.d = 0
         self.x = 0
         self.y = 0
+        self.comp = IntcodeComp(instructions.copy())
+        self.painted = {}
 
     def turn(self,direction):
-        #print(turn,self.d)
-        #print('direction',direction)
-        if direction == 1:
-            #print('1b',self.d)
-            self.d = (self.d + 1) % 4
-            #print('1a',self.d)
-        elif direction == 0:
-            #print('0b',self.d)
-            self.d = (self.d - 1 + 4) % 4
-            #print('0a',self.d)
+        self.d = ((self.d + 1) % 4) if direction == 1 else ((self.d - 1 + 4) % 4)
 
     def move(self):
         self.x = self.x + directions[self.d][0]
         self.y = self.y + directions[self.d][1]
-        return ((self.x,self.y))
-
-painted = {(0,0):0}
-l = (0,0)
-
-computer = IntcodeComp(instructions.copy())
-robot = Robot()
-
-#while True:
-for i in range(3):
     
-    a = painted[l] if l in painted else 0
-    print('comp in',a)
-    #print('starting pos',robot.x,robot.y,robot.d)
-    #print(l,robot.d,painted)
+    def paint(self, starting_colour):
+        self.painted = {(self.x,self.y):starting_colour}
+        while True:   
+            camera = self.painted[(self.x,self.y)] if (self.x,self.y) in self.painted else 0
+            ouput_1 = self.comp.compute(camera)
+            ouput_2 = self.comp.compute(None)
+            if ouput_1 == None:
+                break
+            else:
+                self.painted[(self.x,self.y)] = ouput_1
+            self.turn(ouput_2)
+            self.move()
+        return self.painted
 
-    o1 = computer.compute(a)
-    o2 = computer.compute(a)
-    #print('output of comp',o1,o2)
-    if o1 == None:
-        break
-    else:
-        #print('l,c',l,c)
-        painted[l] = o1
+robot1 = Robot()
 
-    robot.turn(o2)
-    l = robot.move()
-    print('ending pos',robot.x,robot.y,robot.d,painted)
-    print('#### NEXT #####')
-    
-
-print(len(painted))
-#print(painted)
-
-
-#print('ans1:',computer.compute(1))
+print('ans1:',len(robot1.paint(0)))
 
 ################ Part 2 #################
+
+robot2 = Robot()
+output = robot2.paint(1)
+
+
+x = max(entry[0] for entry in output) + 1
+y = max(entry[1] for entry in output) + 1
+
+im = Image.new('RGB', (x+2,y+2),"black")
+
+out = []
+for i in range(y):
+    for j in range(x):
+        val = output.get((j,i),0)
+        if val == 1:
+            im.putpixel((j+1, i+1), (255, 255, 255, 255))
+            out.append('#')
+        else:
+            im.putpixel((j+1, i+1), (0, 0, 0, 255))
+            out.append(' ')
+
+print('ans2:')
+for i in range(0, len(out), x):
+    print(*out[i:i + x], sep='')
+
+im.show()
 
 #computer = IntcodeComp(instructions.copy())
 

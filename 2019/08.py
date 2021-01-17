@@ -45,6 +45,7 @@ print('ans2:')
 for i in range(0, len(out), w):
     print(*out[i:i + w], sep='')
 
+
 ################ Timing #################
 
 print("Time taken: %dms" % (1000 * (time() - t0)))
