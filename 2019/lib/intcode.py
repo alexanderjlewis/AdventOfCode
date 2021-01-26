@@ -1,11 +1,11 @@
 
 class IntcodeComp:
-    def __init__(self,instructions):
+    def __init__(self,instructions,in_val=[]):
         self.i = 0
-        self.inst = instructions
+        self.inst = instructions.copy()
         self.rb = 0
         self.out = 0
-        self.input = []
+        self.input = in_val.copy()
     
     def position(self,ms):
         t = []

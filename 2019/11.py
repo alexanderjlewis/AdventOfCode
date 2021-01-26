@@ -21,7 +21,7 @@ class Robot:
         self.d = 0
         self.x = 0
         self.y = 0
-        self.comp = IntcodeComp(instructions.copy())
+        self.comp = IntcodeComp(instructions)
         self.painted = {}
 
     def turn(self,direction):
@@ -36,7 +36,7 @@ class Robot:
         while True:   
             camera = self.painted[(self.x,self.y)] if (self.x,self.y) in self.painted else 0
             ouput_1 = self.comp.compute([camera])
-            ouput_2 = self.comp.compute()
+            ouput_2 = self.comp.compute([])
             if ouput_1 == None:
                 break
             else:
