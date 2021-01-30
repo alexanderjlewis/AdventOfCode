@@ -1,5 +1,6 @@
 from pathlib import Path
 from time import time
+from PIL import Image
 
 t0 = time()
 
@@ -8,24 +9,15 @@ t0 = time()
 lines = (Path(__file__).parent / "in/08.in").open().read()
 lines = [int(line) for line in lines]
 
-w = 25
-h = 6
-image = []
+w = 25 #image width
+h = 6 # image height
+d = int(len(lines) / (w * h)) #number of layers
 
 ################ Part 1 #################
 
-while True:
-    if len(lines) == 0:
-        break
-    image.append(lines[:(w*h)])
-    lines = lines[(w*h):]
-
-count = 1e10
-for i, layer in enumerate(image):
-    temp = layer.count(0)
-    if temp < count:
-        count = temp
-        layer_index = i
+image = []
+image = [lines[(i*w*h):(i*w*h)+(w*h)] for i in range(d)]
+layer_index = min(layer.count(0) for layer in image)
 
 print('ans1:',image[layer_index].count(1) * image[layer_index].count(2))
 
@@ -45,6 +37,16 @@ print('ans2:')
 for i in range(0, len(out), w):
     print(*out[i:i + w], sep='')
 
+im = Image.new('RGB', (w+2,h+2),"black")
+for i in range(h):
+    for j in range(w):
+        val = out[i*h + j]
+        print(i,j,val)
+        if val == '#':
+            im.putpixel((j+1, i+1), (255, 255, 255, 255))
+        else:
+            im.putpixel((j+1, i+1), (0, 0, 0, 255))
+im.show()
 
 ################ Timing #################
 
