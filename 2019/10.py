@@ -49,7 +49,6 @@ ans2 = ans1_dict[list(ans1_dict.keys())[target-1]][0]
 
 print('ans2:',ans2[0]*100 + ans2[1])
 
-
 ################ Timing #################
 
 print("Time taken: %dms" % (1000 * (time() - t0)))

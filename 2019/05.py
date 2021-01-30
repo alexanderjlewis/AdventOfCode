@@ -13,7 +13,7 @@ for i, val in enumerate(lines):
 
 ################ Part 1 #################
 
-computer = IntcodeComp(instructions.copy())
+computer = IntcodeComp(instructions)
 computer.compute([1])
 while computer.compute() == 0:
     next
@@ -21,7 +21,7 @@ print('ans1:',computer.out)
 
 ################ Part 2 #################
 
-computer = IntcodeComp(instructions.copy())
+computer = IntcodeComp(instructions)
 print('ans2:',computer.compute([5]))
 
 ################ Timing #################

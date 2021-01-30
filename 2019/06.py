@@ -15,21 +15,16 @@ for line in lines:
     else:
         data[a] = [b]
 
-
-#print(data)
-
 ################ Part 1 #################
 
 def orbits(a,i):
     count = 0
     if a in data:
         orbitting = data[a]
-        #print(orbitting,'orbitting',a)
         for item in orbitting:
             count += orbits(item,i+1)
         return count + i
     else:
-        #print('nothing orbitting',a,'returning',i+1)
         return i
 
 print('ans1:',orbits('COM',0))

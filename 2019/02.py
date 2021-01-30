@@ -1,35 +1,36 @@
 from pathlib import Path
 from time import time
+from lib.intcode import IntcodeComp
 
 t0 = time()
 
 ################ Data Processing #################
 
 lines = (Path(__file__).parent / "in/02.in").open().read().split(',')
-d = list(map(int,lines))
+instructions = {}
+for i, val in enumerate(lines):
+    instructions[i] = int(val)
 
 ################ Part 1 #################
 
-def check_noun_verb(a,n,v):
-    a = a[:]
-    a[1] = n
-    a[2] = v
-    for i in range(0,len(a),4):
-        if a[i] == 1:
-            a[a[i+3]] = a[a[i+1]] + a[a[i+2]]
-        elif d[i] == 2:
-            a[a[i+3]] = a[a[i+1]] * a[a[i+2]]
-        else:
-            break
-    return a[0]
+computer = IntcodeComp(instructions)
+computer.inst[1] = 12
+computer.inst[2] = 2
+computer.compute()
 
-print('ans1:',check_noun_verb(d,12,2))
+print('ans1:',computer.inst[0])
 
 ################ Part 2 #################
 
+goal = 19690720
+
 for i in range(100):
     for j in range(100):
-        print('ans2:',100*i+j) if check_noun_verb(d,i,j) == 19690720 else next
+        computer = IntcodeComp(instructions)
+        computer.inst[1] = i
+        computer.inst[2] = j
+        computer.compute()
+        print('ans2:',100*i+j) if computer.inst[0] == goal else next
 
 ################ Timing #################
 
