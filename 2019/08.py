@@ -37,15 +37,13 @@ print('ans2:')
 for i in range(0, len(out), w):
     print(*out[i:i + w], sep='')
 
-im = Image.new('RGB', (w+2,h+2),"black")
+im = Image.new('RGB', (w+2,h+2))
 for i in range(h):
     for j in range(w):
-        val = out[i*h + j]
-        print(i,j,val)
+        val = out[i*w + j]
         if val == '#':
             im.putpixel((j+1, i+1), (255, 255, 255, 255))
-        else:
-            im.putpixel((j+1, i+1), (0, 0, 0, 255))
+
 im.show()
 
 ################ Timing #################

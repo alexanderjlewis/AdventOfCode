@@ -17,7 +17,7 @@ for line in lines:
         temp.append([int(c1),c2])
     reactions[b2] = temp
 
-#print(reactions)
+print(reactions)
 
 ################ Part 1 #################
 
@@ -27,15 +27,19 @@ ingredients = reactions['FUEL']
 ingredients.pop(0) #remove the first '1' associated with 'fuel'.
 
 while len(ingredients) > 0:
-    print(ingredients)
+    #print('b ingred',ingredients)
     next_quantity, next_item = ingredients.pop(0)
     if next_item == 'ORE':
         ore += next_quantity
+        #print('ore found')
         continue
 
-    next_items = reactions[next_item]
+    #print('a ingred',ingredients)
+    #print('next item',next_item)
+    #print('react',reactions)
+    next_items = reactions[next_item].copy()
     
-    print(next_quantity,next_items)
+    #print(next_quantity,next_items)
     next_ratio = math.ceil(next_quantity / next_items.pop(0))
     
     for i, item in enumerate(next_items):
