@@ -14,18 +14,18 @@ target = 2020
 
 ################ Common Function #################
 
-def func(target,items):
+def comb(target,items):
     for x in combinations(entries, items):
         if sum(x) == target:
             return prod(x)
 
 ################ Part 1 #################
 
-print('ans1:',func(target,2))
+print('ans1:',comb(target,2))
 
 ################ Part 2 #################
 
-print('ans2:',func(target,3))
+print('ans2:',comb(target,3))
 
 ################ Timing #################
 

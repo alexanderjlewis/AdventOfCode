@@ -1,31 +1,37 @@
 from pathlib import Path
 from time import time
-from itertools import combinations
-from math import prod
 
 t0 = time()
 
 ################ Data Processing #################
 
-fin = (Path(__file__).parent / "in/01.in").open()
-entries = [int(x) for x in fin.readlines()]
+lines = (Path(__file__).parent / "in/02.in").open().readlines()
 
-target = 2020
+valid_count1 = 0
+valid_count2 = 0
 
 ################ Common Function #################
 
-def func(target,items):
-    for x in combinations(entries, items):
-        if sum(x) == target:
-            return prod(x)
+for entry in lines:
+    s, password = entry.split(": ")
+    s, letter = s.split(' ')
+    lower,upper = s.split('-')
 
-################ Part 1 #################
+    lower = int(lower)
+    upper = int(upper)
 
-print('ans1:',func(target,2))
+    char_count = password.count(letter)
 
-################ Part 2 #################
+    ################ Part 1 #################
+    if (upper >= char_count) and (lower <= char_count):
+        valid_count1 += 1
 
-print('ans2:',func(target,3))
+    ################ Part 2 #################
+    if (password[lower - 1] == letter) ^ (password[upper - 1] == letter):
+        valid_count2 += 1
+
+print('ans1:',valid_count1)
+print('ans2:',valid_count2)
 
 ################ Timing #################
 
