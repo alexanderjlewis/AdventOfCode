@@ -38,10 +38,10 @@ print('ans1:',gap_1 * gap_3)
 '''
 Gaps of 3 only have one arrangement, given max gap = 3
 Gaps of 1 have multiple arrangements depening on how many '1' gaps occur in a row:
-    -1: 1 arrangement (1*1)
-    -2: 2 arrangements (2*1, 1*2)
-    -3: 4 arrangements (3*1, 1*2 + 1*1, 1*1 + 1*2)
-    -4: 7 arrangements (4*1, 2*2, 1*2 + 2*1, 2*1 + 1*2, 1*1 + 1*2 + 1*1, 3*1 + 1*1, 1*1 + 3*1)
+    -1: 1 arrangement (1)
+    -2: 2 arrangements (1-1, 2)
+    -3: 4 arrangements (1-1-1, 2-1, 1-2, 1-1-1)
+    -4: 7 arrangements (1-1-1-1, 2-2, 2-1-1, 1-2-1, 1-1-2, 3-1, 1-3)
 Analysis of raw data shows that a max of 4 '1' gaps occcur in a row so no need to consider above that
 '''
 
