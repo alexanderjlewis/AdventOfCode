@@ -13,11 +13,10 @@ records = [dict(field.split(':') for field in record) for record in records]
 
 ################ Common Function #################
 
-
+required_fields = ['byr','iyr','eyr','hgt','hcl','ecl','pid'] #cid not required
 
 ################ Part 1 #################
 
-required_fields = ['byr','iyr','eyr','hgt','hcl','ecl','pid'] #cid not required
 count1 = 0
 
 for record in records:
