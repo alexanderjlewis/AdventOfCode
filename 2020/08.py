@@ -57,7 +57,7 @@ for i, instruction in enumerate(instructions):
     pos = 0
     acc = 0
 
-    while True:
+    while pos < len(instructions_part2):
         try:
             op, arg = instructions_part2[pos]
             instructions_part2[pos] = ''
@@ -71,45 +71,10 @@ for i, instruction in enumerate(instructions):
         elif op == 'acc':
             acc += arg
             pos += 1
-
-        if pos >= len(instructions_part2):
-            program_terminates = True
-            break
-
-    if program_terminates:
+    else:
         print('ans2:',acc)
         break
 
 ################ Timing #################
 
 print("Time taken: %dms" % (1000 * (time() - t0)))
-
-
-'''
-
-import re
-import math
-import copy
-
-fin = open("data.in")
-lines = [line.strip() for line in fin.readlines() if line.strip()]
-visited = set()
-acc = 0
-pos = 0
-max_index = 0
-
-#print(lines)
-
-lines = [line.replace('+','') for line in lines]
-lines = [line.split(' ') for line in lines]
-
-temp_lines = copy.deepcopy(lines)
-max_index = len(lines)
-
-for i in range(max_index):
-    
-
-    
-
-
-'''
