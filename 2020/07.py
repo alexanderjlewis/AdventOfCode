@@ -1,6 +1,5 @@
 from pathlib import Path
 from time import time
-import math
 
 t0 = time()
 

@@ -1,7 +1,5 @@
 from pathlib import Path
 from time import time
-import math
-from typing import Counter
 
 t0 = time()
 

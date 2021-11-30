@@ -1,6 +1,6 @@
 from pathlib import Path
 from time import time
-import math
+from math import ceil, floor
 
 t0 = time()
 
@@ -22,15 +22,15 @@ for bpass in passes:
 
     for char in row_code:
         if char == 'B':
-            row_range = (math.ceil(sum(row_range)/2) , row_range[1])
+            row_range = (ceil(sum(row_range)/2) , row_range[1])
         else:
-            row_range = (row_range[0] , math.floor(sum(row_range)/2))
+            row_range = (row_range[0] , floor(sum(row_range)/2))
 
     for char in col_code:
         if char == 'R':
-            col_range = (math.ceil(sum(col_range)/2), col_range[1])
+            col_range = (ceil(sum(col_range)/2), col_range[1])
         else:
-            col_range = (col_range[0],math.floor(sum(col_range)/2))
+            col_range = (col_range[0],floor(sum(col_range)/2))
 
     seat_ids.append((row_range[1] * 8) + col_range[1])
 
