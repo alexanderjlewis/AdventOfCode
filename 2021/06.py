@@ -8,43 +8,40 @@ t0 = time()
 
 fish_list = []
 
-fin = (Path(__file__).parent / "in/06.in")
+fin = (Path(__file__).parent / "in/06_test.in")
 with open(fin, "r") as f:
    fish_list = f.read().split(',')
    fish_list = [int(x) for x in fish_list]
 
-#print(fish_list)
-
 ################ Common Function #################
 
-def brute_force_fish(days,fish_list):
-    new_fish = 0
+def sim_fish(day_number,day_limit):
+    #print('new fish:',day_number)
+    
+    number_fish = 1
 
-    for _ in range(days):
-        new_fish = 0
-        for i, fish in enumerate(fish_list):
-            if fish == 0:
-                fish_list[i] = 6
-                new_fish += 1
-            else:
-                fish_list[i] -= 1
-        
-        for i in range(new_fish):
-            fish_list.append(8)
-        
-        #print(fish_list)
+    #print('next day_number:',day_number)
 
-    return len(fish_list)
+    if day_number > day_limit:
+        pass
+    else:
+        while day_number <= day_limit:
+            #print('rec - day:',day_number)
+            number_fish += sim_fish(day_number + 9,day_limit)
+            day_number += 7
+
+    #print('returning fish',number_fish)
+    return number_fish
 
 ################ Part 1 #################
 
 options = [1,2,3,4,5]
 answers = {}
 
-days = 80
+day_limit = 80
 
 for option in options:
-    answers[option] = brute_force_fish(days,[option])
+    answers[option] = sim_fish(option+1,day_limit)
 
 ans1 = 0
 
@@ -53,20 +50,54 @@ for fish in fish_list:
 
 print('ans1:',ans1)
 
-################ Part 2 #################
+################ Part 2 ################
 
-options = [1]
-answers = {}
+def sim_fish2(days_remaining):
+    #print('new fish:',days_remaining)
+    
+    number_fish = 1
+    days_remaining -= 9
+    
+    #print('next day_number:',day_number)
+
+    if days_remaining <= 0:
+        pass
+    else:
+        while days_remaining > 0:
+            #print('rec - day:',day_number)
+            #print('dr',days_remaining,'adding',outs[days_remaining-1])
+            number_fish += outs[days_remaining-1]
+            days_remaining -= 7
+
+    #print('returning fish',number_fish)
+    return number_fish
+
+outs = []
 
 days = 256
+for i in range(1,days+1):
+    outs.append(sim_fish2(i))
+    
+options = [1,2,3,4,5]
+answers = {}
+
+day_limit = 18
 
 for option in options:
-    answers[option] = brute_force_fish(days,[option])
+    temp = 0
+    x = day_limit - option - 1
 
-ans2 = 0
+    while x > 0:
+        temp += outs[x]
+        x -= 7
+
+    answers[option] = temp
+
+ans2 = len(fish_list)
 
 for fish in fish_list:
-    ans1 += answers[fish]
+    print('adding',answers[fish])
+    ans2 += answers[fish]
 
 print('ans2:',ans2)
 
