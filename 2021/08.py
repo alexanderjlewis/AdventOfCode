@@ -1,7 +1,6 @@
 
 from pathlib import Path
 from time import time
-from types import SimpleNamespace
 
 t0 = time()
 
@@ -10,7 +9,7 @@ t0 = time()
 signal_list = []
 output_list = []
 
-fin = (Path(__file__).parent / "in/08_test.in")
+fin = (Path(__file__).parent / "in/08.in")
 #fin = (Path(__file__).parent / "in/08.in")
 with open(fin, "r") as f:
     
@@ -38,74 +37,151 @@ print('ans1:',count)
 
 ################ Part 2 ################
 
+def string_diff(string_A,string_B):
+    # takes two strings as inputs
+    # returns all elements that don't appear in both strings
 
+    response = []
 
-# '4' Digit plus Segment 'A' + Segment ? - find the only one with a single difference, that's the 9 and Segment 'G'
-# Only missing Segment from 9 digit is 'E'
-# '3' Digit + Segment 'A' + 'G' + Segment ? - find the only one with a single difference, that's the 3 and Segment 'D'
-# Difference between digits 3 and 9 gives Segment 'B'
-# '5' Digit minus Segments A/B/D/G gives 'F'
-# '1' Digit minus Segment F gives 'C'
-# 
-# 
-# 
+    for char in string_A:
+        if char in string_B:
+            pass
+        else:
+            response.append(char)
+    
+    for char in string_B:
+        if char in string_A:
+            pass
+        else:
+            response.append(char)
 
-A = int('1000000',2)
-B = int('0100000',2)
-C = int('0010000',2)
-D = int('0001000',2)
-E = int('0000100',2)
-F = int('0000010',2)
-G = int('0000001',2)
+    response = ''.join(set(response))
 
-print(bin(A&B))
+    return response
 
-segments = {'A':'','B':'','C':'','D':'','E':'','F':'','G':'',}
+def process_input(signal_list,output_list):
 
-numbers = {0:'',1:'',2:'',3:'',4:'',5:'',6:'',7:'',8:'',9:''}
+    segments = {'A':'','B':'','C':'','D':'','E':'','F':'','G':'',}
 
-signals = signal_list[0]
+    numbers = {0:'',1:'',2:'',3:'',4:'',5:'',6:'',7:'',8:'',9:''}
 
-for i in range(len(signals)-1,-1,-1):
-    if len(signals[i]) == 2:
-        numbers[1] = signals[i]
-        signals.pop(i)
-    elif len(signals[i]) == 3:
-        numbers[7] = signals[i]
-        signals.pop(i)
-    elif len(signals[i]) == 4:
-        numbers[4] = signals[i]
-        signals.pop(i)
-    elif len(signals[i]) == 7:
-        numbers[8] = signals[i]
-        signals.pop(i)
+    #### Rule 0 ####
+    # find first four numbers based on unique lengths
+    remaining_signals = []
+    for signal in signal_list:
+        if len(signal) == 2:
+            numbers[1] = signal
+        elif len(signal) == 3:
+            numbers[7] = signal
+        elif len(signal) == 4:
+            numbers[4] = signal
+        elif len(signal) == 7:
+            numbers[8] = signal
+        else:
+            remaining_signals.append(signal)
 
-signals = [''.join(sorted(signal)) for signal in signals]
-print(signals)
+    signals = remaining_signals.copy()
+    #### Rule 1 ####
+    # Segment 'A' is difference between the 7 and 1 digits
 
-#### Rule 1 ####
-# Segment 'A' is difference between the 7 and 1 digits
+    segments['A'] = numbers[7]
 
-segments['A'] = numbers[7]
+    for char in numbers[1]:
+        segments['A'] = segments['A'].replace(char,'')
 
-for char in numbers[1]:
-    segments['A'] = segments['A'].replace(char,'')
+    #### Rule 2 ####
+    # '4' Digit plus Segment 'A' + Segment ? - find the only one with a single extra segment, that's the 9 and Segment 'G'
+    test_signal = numbers[4] + segments['A']
 
-#### Rule 2 ####
+    remaining_signals = []
+    for signal in signals:
+        diff = string_diff(signal,test_signal)
+        if len(diff) == 1:
+            numbers[9] = signal
+            segments['G'] = diff
+        else:
+            remaining_signals.append(signal)
+    
+    signals = remaining_signals.copy()
 
+    #### Rule 3 ####
+    # Only missing Segment from 9 digit is 'E'
+    segments['E'] = string_diff(numbers[9],'abcdefg')
 
-numbers[9] = numbers[4] + segments['A']
+    #### Rule 4 ####
+    # '7' Digit + Segment 'G' + Segment ? - find the only one with a single difference, that's the 3 and Segment 'D'
+    test_signal = numbers[7] + segments['G']
 
-#for char in numbers[1]:
-#    segments['A'] = segments['A'].replace(char,'')
+    remaining_signals = []
+    for signal in signals:
+        diff = string_diff(signal,test_signal)
+        if len(diff) == 1:
+            numbers[3] = signal
+            segments['D'] = diff
+        else:
+            remaining_signals.append(signal)
 
-########
+    signals = remaining_signals.copy()
 
-print(numbers)
-print(segments)
+    #### Rule 5 ####
+    # Difference between digits 3 and 9 gives Segment 'B'
+    segments['B'] = string_diff(numbers[9],numbers[3])
 
+    #### Rule 6 ####
+    # '0' digit is 8 digit minus segment 'D'
+    test_signal = numbers[8]
+    test_signal = test_signal.replace(segments['D'],'')
 
-#print('ans2:',min(fuel))
+    remaining_signals = []
+    for signal in signals:
+        diff = string_diff(signal,test_signal)
+        if len(diff) == 0:
+            numbers[0] = signal
+        else:
+            remaining_signals.append(signal)
+
+    signals = remaining_signals.copy()
+
+    #### Rule 7 ####
+    # '6' digit is only signal of length 6 left.. nope
+    for i in range(len(signals)):
+        if len(signals[i]) == 6:
+            numbers[6] = signals[i]
+            signals.pop(i)
+            break
+
+    #### Rule 8 ####
+    # difference between digit 6 and 8 is segment C
+    segments['C'] = string_diff(numbers[6],numbers[8])
+
+    #### Rule 9 ####
+    # digit 1 minuts segment C is segment F
+    segments['F'] = numbers[1].replace(segments['C'],'')
+
+    #### Rule 10 ####
+    # trivial to fund remianing numbers by assembling known segments
+    numbers[2] = segments['A'] + segments['C'] + segments['D'] + segments['E'] + segments['G']
+    numbers[5] = segments['A'] + segments['B'] + segments['D'] + segments['F'] + segments['G']
+
+    #### Rules Done ####
+
+    ans = ''
+
+    for entry in output_list:
+        for number in numbers:
+            diff = string_diff(entry,numbers[number])
+            if len(diff) == 0:
+                ans = ans + str(number)
+
+    ans = int(ans)
+
+    return ans
+
+ans2 = 0
+for i in range(len(signal_list)):
+    ans2 += process_input(signal_list[i],output_list[i])
+
+print('ans2:',ans2)
 
 ################ Timing #################
 
