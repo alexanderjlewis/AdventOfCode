@@ -5,6 +5,7 @@ t0 = time()
 
 ################ Data Processing #################
 
+#fin = (Path(__file__).parent / "in/01_test.in").open().read()
 fin = (Path(__file__).parent / "in/01.in").open().read()
 measurements = fin.split('\n')
 measurements = [int(measurement) for  measurement in measurements]

@@ -22,15 +22,9 @@ with open(fin, "r") as f:
     draw_order = [int(item) for item in draw_order]
     raw_boards = f.read().split('\n\n')
     raw_boards = [board.strip().replace('\n',' ').replace('  ',' ').split(' ') for board in raw_boards]   
-    #boards = [[int(number) for number in board] for board in boards]  
-
-#rint(draw_order)
-#print(raw_boards)
 
 board_size = int(sqrt(len(raw_boards[0])))
 number_boards = len(raw_boards)
-
-#print(board_size,number_boards)
 
 boards = []
 
@@ -51,8 +45,6 @@ for raw_board in raw_boards:
         board.append(string_rows)
         
     boards.append(board)
-
-#print('boards',boards)
 
 ################ Common Function #################
 

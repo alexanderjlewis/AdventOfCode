@@ -6,6 +6,7 @@ t0 = time()
 
 ################ Data Processing #################
 
+#fin = (Path(__file__).parent / "in/02_test.in").open().read()
 fin = (Path(__file__).parent / "in/02.in").open().read()
 commands = fin.split('\n')
 commands = [command.split(' ') for command in commands]

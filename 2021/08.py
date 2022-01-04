@@ -9,8 +9,8 @@ t0 = time()
 signal_list = []
 output_list = []
 
+#fin = (Path(__file__).parent / "in/08_test.in")
 fin = (Path(__file__).parent / "in/08.in")
-#fin = (Path(__file__).parent / "in/08.in")
 with open(fin, "r") as f:
     
     for line in f:
