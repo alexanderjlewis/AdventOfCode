@@ -7,6 +7,7 @@ t0 = time()
 
 ################ Data Processing #################
 
+#fin = (Path(__file__).parent / "in/test/03.in") #(ANS1=4512,ANS2=1924)
 fin = (Path(__file__).parent / "in/03.in")
 with open(fin, "r") as f:
     numbers = [list(line.replace('\n','')) for line in f]
@@ -14,14 +15,19 @@ with open(fin, "r") as f:
 
 ################ Common Function #################
 
-#print(numbers)
-
 numbers_length = len(numbers)
+
+print(numbers)
 
 ################ Part 1 #################
 
 bits = zip(*numbers)
+a = (list(map(list,bits)))
+a = a[0]
+print(max(set(a), key = a.count))
+print(min(set(a), key = a.count))
 bits = [sum(bit) for bit in bits]
+print(bits)
 
 gamma_rate = ''
 epsilon_rate = ''

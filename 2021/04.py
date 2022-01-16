@@ -16,6 +16,7 @@ def format_line(line):
     line = [int(x) for x in line]
     return(line)
 
+#fin = (Path(__file__).parent / "in/test/04.in") #(ANS1=4512,ANS2=1924)
 fin = (Path(__file__).parent / "in/04.in")
 with open(fin, "r") as f:
     draw_order = f.readline().strip().split(',')

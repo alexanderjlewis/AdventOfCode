@@ -9,7 +9,7 @@ t0 = time()
 
 locations = []
 
-#fin = (Path(__file__).parent / "in/09_test.in")
+#fin = (Path(__file__).parent / "in/test/09.in") #(ANS1=15,ANS2=1134)
 fin = (Path(__file__).parent / "in/09.in")
 with open(fin, "r") as f:
     for line in f:

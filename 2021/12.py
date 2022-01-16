@@ -9,9 +9,9 @@ t0 = time()
 
 connections = []
 
-#fin = (Path(__file__).parent / "in/12_test_0.in") #(ANS1 = 10, ANS2 = 36)
-#fin = (Path(__file__).parent / "in/12_test_1.in") #(ANS1 = 19, ANS2 = 103)
-#fin = (Path(__file__).parent / "in/12_test_2.in") #(ANS1 = 226, ANS2 = 3509)
+#fin = (Path(__file__).parent / "in/test/12_0.in") #(ANS1=10,ANS=36)
+#fin = (Path(__file__).parent / "in/test/12_1.in") #(ANS1=19,ANS2=103)
+#fin = (Path(__file__).parent / "in/test/12_2.in") #(ANS1=226,ANS2=3509)
 fin = (Path(__file__).parent / "in/12.in")
 with open(fin, "r") as f:
     for line in f:

@@ -6,8 +6,8 @@ t0 = time()
 
 ################ Data Processing #################
 
-#fin = (Path(__file__).parent / "in/07_test.in")
-fin = (Path(__file__).parent / "in/07.in")
+fin = (Path(__file__).parent / "in/test/07.in") #(ANS1=37,ANS2=168)
+#fin = (Path(__file__).parent / "in/07.in")
 with open(fin, "r") as f:
    crab_list = f.read().split(',')
    crab_list = [int(x) for x in crab_list]

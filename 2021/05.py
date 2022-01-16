@@ -8,7 +8,7 @@ t0 = time()
 
 lines = []
 
-#fin = (Path(__file__).parent / "in/05_test.in")
+#fin = (Path(__file__).parent / "in/test/05.in") #(ANS1=5,ANS2=12)
 fin = (Path(__file__).parent / "in/05.in")
 with open(fin, "r") as f:
     for line in f:

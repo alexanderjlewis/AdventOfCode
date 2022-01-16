@@ -9,7 +9,7 @@ t0 = time()
 
 subsystems = []
 
-#fin = (Path(__file__).parent / "in/10_test.in")
+#fin = (Path(__file__).parent / "in/test/10.in") #(ANS1=26397,ANS2=288957)
 fin = (Path(__file__).parent / "in/10.in")
 with open(fin, "r") as f:
     for line in f:

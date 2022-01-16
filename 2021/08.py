@@ -9,7 +9,7 @@ t0 = time()
 signal_list = []
 output_list = []
 
-#fin = (Path(__file__).parent / "in/08_test.in")
+#fin = (Path(__file__).parent / "in/test/08.in") #(ANS1=26,ANS2=61229)
 fin = (Path(__file__).parent / "in/08.in")
 with open(fin, "r") as f:
     

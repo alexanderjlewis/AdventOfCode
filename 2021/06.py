@@ -8,7 +8,7 @@ t0 = time()
 
 fish_starting_list = []
 
-#fin = (Path(__file__).parent / "in/06_test.in")
+#fin = (Path(__file__).parent / "in/test/06.in") #(ANS1=5934,ANS2=26984457539)
 fin = (Path(__file__).parent / "in/06.in")
 with open(fin, "r") as f:
    fish_list = f.read().split(',')

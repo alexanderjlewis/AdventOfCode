@@ -9,7 +9,7 @@ t0 = time()
 
 energy_levels = []
 
-#fin = (Path(__file__).parent / "in/11_test.in")
+#fin = (Path(__file__).parent / "in/test/11.in") #(ANS1=1656,ANS=195)
 fin = (Path(__file__).parent / "in/11.in")
 with open(fin, "r") as f:
     for line in f:
@@ -23,7 +23,7 @@ adjacency = [(i,j) for i in (-1,0,1) for j in (-1,0,1) if not (i == j == 0)] #th
 rows = len(energy_levels)
 cols = len(energy_levels[0])
 
-steps = 195
+steps = 100
 flashes = 0
 
 def add_one(array):
