@@ -4,7 +4,6 @@ from pathlib import Path
 from time import time
 from math import ceil, floor
 from itertools import combinations
-from typing import ChainMap
 
 t0 = time()
 
@@ -13,7 +12,7 @@ t0 = time()
 points = []
 instructions = []
 
-#fin = (Path(__file__).parent / "in/test/18.in") #(ANS1=,ANS2=)
+#fin = (Path(__file__).parent / "in/test/18.in") #(ANS1=4140,ANS2=3993)
 fin = (Path(__file__).parent / "in/18.in")
 with open(fin, "r") as f:
     data = f.read()
@@ -32,12 +31,10 @@ class Pair():
         
         if level >= 4 and isinstance(self.left,int) and isinstance(self.right,int):
             if not occured:
-                #print('ex',self.left,self.right)
                 return True, self.left, self.right, True
         else:
             new_level = level + 1
             if isinstance(self.left, Pair):
-                #print('explode left',self.left)
                 exploded, r_l, r_r, occured = self.left.explode(new_level,occured)
                 if exploded:
                     self.left = 0
@@ -48,14 +45,12 @@ class Pair():
                 return_l = r_l
             
             if isinstance(self.right, Pair):
-                #print('explode right',self.right)
                 exploded, r_l, r_r, occured = self.right.explode(new_level,occured)
                 if exploded:
                     self.right = 0
                 if isinstance(self.left, Pair):
                     self.left.add_to_right(r_l)
                 else:
-                    #print(self.left,r_l)
                     self.left += r_l
                 return_r = r_r
 
@@ -94,6 +89,7 @@ class Pair():
         return occured
 
     def get_magnitude(self):
+        '''calculates the magnitude of the pair'''
         magnitude = 0
 
         if isinstance(self.left, Pair):
@@ -132,7 +128,7 @@ def parse_string_to_object(str):
                 left, str = str[:i+1], str[i+1:]
                 break
 
-        right = str[1:]
+        right = str[1:] #remove the comma character from the start of the string
 
         if len(left) > 1:
             left = parse_string_to_object(left)
@@ -146,26 +142,22 @@ def parse_string_to_object(str):
 
     return Pair(left, right)
 
-def explode_number_n_times(number):
-    ''' This function will repeatedly explode a number until there is nothing left to explode '''
-    while True:
-        number_in = str(number)
-        number.explode()
-        if number_in == str(number):
-            return number
-
 def reduce(number):
-    modified = False
-    while modified == False:
-        modified = False
 
+    while True: 
         number_in = str(number)
-        
-        number = explode_number_n_times(number)
-        number.split()
+
+        while True: #repeatedly explode until no more valid pairs to explode
+            number_in = str(number)
+            number.explode()
+            if number_in == str(number):
+                break
+
+        number.split() #perform one split actions
 
         if str(number) == number_in:
             break
+
     return number
 
 ################ Part 1 #################
@@ -193,13 +185,10 @@ for combination in number_combinations:
     input_1 = parse_string_to_object(combination[0])
     input_2 = parse_string_to_object(combination[1])
 
-    val_1 = reduce(Pair(deepcopy(input_1),deepcopy(input_2)))
-    val_2 = reduce(Pair(deepcopy(input_2),deepcopy(input_1)))
+    order_1 = reduce(Pair(deepcopy(input_1),deepcopy(input_2)))
+    order_2 = reduce(Pair(deepcopy(input_2),deepcopy(input_1)))
 
-    val_1_mag = val_1.get_magnitude()
-    val_2_mag = val_2.get_magnitude()
-
-    max_val = max(val_1.get_magnitude(), val_2.get_magnitude(), max_val)
+    max_val = max(order_1.get_magnitude(), order_2.get_magnitude(), max_val)
 
 print('ans2:',max_val)
 
