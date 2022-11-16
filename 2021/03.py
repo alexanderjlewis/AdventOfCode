@@ -15,25 +15,19 @@ with open(fin, "r") as f:
 
 ################ Common Function #################
 
-numbers_length = len(numbers)
 
-print(numbers)
 
 ################ Part 1 #################
 
-bits = zip(*numbers)
-a = (list(map(list,bits)))
-a = a[0]
-print(max(set(a), key = a.count))
-print(min(set(a), key = a.count))
-bits = [sum(bit) for bit in bits]
-print(bits)
+numbers_length = len(numbers)
+number_columns = list(zip(*numbers))
+column_sums = [sum(column) for column in number_columns]
 
 gamma_rate = ''
 epsilon_rate = ''
 
-for bit in bits:
-    if bit > numbers_length/2:
+for column_sum in column_sums:
+    if column_sum > numbers_length/2:
         gamma_rate += '1'
         epsilon_rate += '0'
     else:
@@ -50,39 +44,39 @@ print('ans1:',gamma_rate * epsilon_rate)
 o2_rate = ''
 oxygen_rate = ''
 
-number_o2_gen = deepcopy(numbers)
-number_oxy_rate = deepcopy(numbers)
+numbers_o2_gen = deepcopy(numbers)
+numbers_oxy_rate = deepcopy(numbers)
 
 bit_pos = 0
 
-while len(number_o2_gen) > 1:
+while len(numbers_o2_gen) > 1:
 
-    bits = zip(*number_o2_gen)
-    bits = [sum(bit) for bit in bits]
-
-    if bits[bit_pos] >= len(number_o2_gen)/2:
-        number_o2_gen[:] = (x for x in number_o2_gen if x[bit_pos] == 1)
+    o2_gen_columns = list(zip(*numbers_o2_gen))
+    o2_gen_sums = [sum(column) for column in o2_gen_columns]
+ 
+    if o2_gen_sums[bit_pos] >= len(numbers_o2_gen)/2:
+        numbers_o2_gen[:] = (x for x in numbers_o2_gen if x[bit_pos] == 1)
     else:
-        number_o2_gen[:] = (x for x in number_o2_gen if x[bit_pos] == 0)
+        numbers_o2_gen[:] = (x for x in numbers_o2_gen if x[bit_pos] == 0)
 
     bit_pos += 1
 
 bit_pos = 0
 
-while len(number_oxy_rate) > 1:
+while len(numbers_oxy_rate) > 1:
 
-    bits = zip(*number_oxy_rate)
-    bits = [sum(bit) for bit in bits]
+    oxy_rate_columns = list(zip(*numbers_oxy_rate))
+    oxy_sums = [sum(column) for column in oxy_rate_columns]
 
-    if bits[bit_pos] >= len(number_oxy_rate)/2:
-        number_oxy_rate[:] = (x for x in number_oxy_rate if x[bit_pos] == 0)
+    if oxy_sums[bit_pos] >= len(numbers_oxy_rate)/2:
+        numbers_oxy_rate[:] = (x for x in numbers_oxy_rate if x[bit_pos] == 0)
     else:
-        number_oxy_rate[:] = (x for x in number_oxy_rate if x[bit_pos] == 1)
+        numbers_oxy_rate[:] = (x for x in numbers_oxy_rate if x[bit_pos] == 1)
 
     bit_pos += 1
 
-o2_rate = ''.join(map(str,number_o2_gen[0]))
-oxygen_rate = ''.join(map(str,number_oxy_rate[0]))
+o2_rate = ''.join(map(str,numbers_o2_gen[0]))
+oxygen_rate = ''.join(map(str,numbers_oxy_rate[0]))
 
 o2_rate = int(o2_rate,2)
 oxygen_rate = int(oxygen_rate,2)
