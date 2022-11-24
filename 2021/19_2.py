@@ -1,9 +1,8 @@
  
-from copy import deepcopy
+from itertools import product
 from pathlib import Path
 from time import time
 from math import ceil, floor, sin, cos, pi
-from itertools import combinations
 import numpy as np
 
 t0 = time()
@@ -13,8 +12,8 @@ t0 = time()
 points = []
 instructions = []
 
-fin = (Path(__file__).parent / "in/test/19.in") #(ANS1=79,ANS2=)
-#fin = (Path(__file__).parent / "in/19.in")
+#fin = (Path(__file__).parent / "in/test/19.in") #(ANS1=79,ANS2=)
+fin = (Path(__file__).parent / "in/19.in")
 with open(fin, "r") as f:
     data = f.read()
     data = data.split('\n\n')
@@ -22,8 +21,6 @@ with open(fin, "r") as f:
 
 beacons = {}
 deltas = {}
-
-#print(data)
 
 for i,entry in enumerate(data):
     data = entry[1:]
@@ -37,55 +34,66 @@ for i,entry in enumerate(data):
 
 ################ Common Function #################
 
-direction_matrix = [
-    [0      ,0      ,0],
-    [pi/2   ,0      ,0],
-    [pi     ,0      ,0],
-    [3*pi/2 ,0      ,0],
-    [0      ,pi/2   ,0],
-    [pi/2   ,pi/2   ,0],
-    [pi     ,pi/2   ,0],
-    [3*pi/2 ,pi/2   ,0],
-    [0      ,pi     ,0],
-    [pi/2   ,pi     ,0],
-    [pi     ,pi     ,0],
-    [3*pi/2 ,pi     ,0],
-    [0      ,3*pi/2 ,0],
-    [pi/2   ,3*pi/2 ,0],
-    [pi     ,3*pi/2 ,0],
-    [3*pi/2 ,3*pi/2 ,0],
-    [0      ,0      ,pi/2],
-    [pi/2   ,0      ,pi/2],
-    [pi     ,0      ,pi/2],
-    [3*pi/2 ,0      ,pi/2],
-    [0      ,0      ,3*pi/2],
-    [pi/2   ,0      ,3*pi/2],
-    [pi     ,0      ,3*pi/2],
-    [3*pi/2 ,0      ,3*pi/2]
+directions_matrix = [
+    [0      ,0      ,0],     [pi/2   ,0      ,0],   [pi     ,0      ,0],     [3*pi/2 ,0      ,0],
+    [0      ,pi/2   ,0],     [pi/2   ,pi/2   ,0],   [pi     ,pi/2   ,0],     [3*pi/2 ,pi/2   ,0],
+    [0      ,pi     ,0],     [pi/2   ,pi     ,0],   [pi     ,pi     ,0],     [3*pi/2 ,pi     ,0],
+    [0      ,3*pi/2 ,0],     [pi/2   ,3*pi/2 ,0],   [pi     ,3*pi/2 ,0],     [3*pi/2 ,3*pi/2 ,0],
+    [0      ,0      ,pi/2],  [pi/2   ,0      ,pi/2],[pi     ,0      ,pi/2],  [3*pi/2 ,0      ,pi/2],
+    [0      ,0      ,3*pi/2],[pi/2   ,0    ,3*pi/2],[pi     ,0      ,3*pi/2],[3*pi/2 ,0      ,3*pi/2]
 ]
 
-def find_coord_deltas_of_beacon_array(beacon_array,base_beacon):
-    coord_deltas = []
+def calc_deltas_between_beacons_in_array(beacon_array,base_beacon):
+    deltas = []
     for beacon in beacon_array:
-        coord_deltas.append(beacon-base_beacon)
-    coord_deltas = np.asarray(coord_deltas)
-    coord_deltas = np.sort(coord_deltas,axis=0)
+        deltas.append(beacon - base_beacon)
+    deltas = np.asarray(deltas)
+    return deltas
+
+
+def rotate_vector_3d(vector,rotation):
     
-    return coord_deltas
-
-def rotate_vector_3d(vector_array,rotation):
-    #R = [pi/3,pi/2,0] #Rs in (x,y,z) in radians to apply to G
-
-    P = [np.array([[1,0,0],[0,cos(rotation[0]),sin(rotation[0])],[0,sin(rotation[0]),cos(rotation[0])]]),
-        np.arotationrotationay([[cos(rotation[1]),0,sin(rotation[1])],[0,1,0],[-sin(rotation[1]),0,cos(rotation[1])]]),
-        np.arotationrotationay([[cos(rotation[2]),-sin(rotation[2]),0],[sin(rotation[2]),cos(rotation[2]),0],[0,0,1]])]
+    P = [np.array([[1,0,0],[0,cos(rotation[0]),-sin(rotation[0])],[0,sin(rotation[0]),cos(rotation[0])]]),
+        np.array([[cos(rotation[1]),0,sin(rotation[1])],[0,1,0],[-sin(rotation[1]),0,cos(rotation[1])]]),
+        np.array([[cos(rotation[2]),-sin(rotation[2]),0],[sin(rotation[2]),cos(rotation[2]),0],[0,0,1]])]
 
     for Pa in P: #apply the rotations to the original vector
-        vector_array = np.matmul(Pa,vector_array)
+        vector = np.matmul(Pa,vector)
 
-    vector_array = np.round(vector_array,2) #round to simplify floats
+    vector = np.round(vector,2) #round to simplify floats
 
-    return vector_array
+    return vector
+
+
+def rotate_and_compare(beacon_pair,base_array,comparison_array):
+
+    for direction in directions_matrix:
+        
+        comparison_array_rotated_and_offset = []
+
+        for entry in comparison_array:
+            comparison_array_rotated_and_offset.append(rotate_vector_3d(entry,direction))
+    
+        offset = beacon_pair[0] - rotate_vector_3d(beacon_pair[1],direction)
+
+        for i, _ in enumerate(comparison_array_rotated_and_offset):
+            comparison_array_rotated_and_offset[i] += offset
+
+        matches = 0
+        unmatched_beacons = []
+
+        for comparison_array_beacon in comparison_array_rotated_and_offset:
+
+            if np.any(np.all(comparison_array_beacon == base_array, axis=1)):
+                matches += 1
+            else:
+                unmatched_beacons.append(comparison_array_beacon)
+        
+        if matches >= 12:
+                       
+            return True, unmatched_beacons
+
+    return False, None
 
 
 ################ Part 1 #################
@@ -93,16 +101,32 @@ def rotate_vector_3d(vector_array,rotation):
 #assume beacon 0 is at (0,0,0) and facing +ve x/y/z with no rotation
 #all other beacons will be matched and transfromed such that beacon coordiates are relative to beacon 0 (including removing any rt)
 
-for base_beacon0 in beacons[0]:
-    coord_deltas0 = find_coord_deltas_of_beacon_array(beacons[0],base_beacon0)
+beacons_to_parse = list(range(1,len(beacons)))
 
-    for base_beacon1 in beacons[1]:
-        coord_deltas1 = find_coord_deltas_of_beacon_array(beacons[1],base_beacon1)
+i = 0
 
+while len(beacons_to_parse) > 0:
 
+    if i >= len(beacons_to_parse):
+        i = 0
 
+    for beacon_pair in product(beacons[0],beacons[beacons_to_parse[i]]):
+               
+        match, unmatched_beacons = rotate_and_compare(beacon_pair,beacons[0],beacons[beacons_to_parse[i]])
+        
+        if match:
 
-#print('ans1:',output_number.get_magnitude())
+            print('matched 0 and ',beacons_to_parse[i])
+
+            beacons_to_parse.pop(i)
+            
+            beacons[0].extend(unmatched_beacons)
+            
+            break
+
+    i += 1
+
+print('ans1:',len(beacons[0]))
 
 ################ Part 2 ################
 
@@ -117,37 +141,7 @@ print("Time taken: %dms" % (1000 * (time() - t0)))
 
 
 """
-from math import sin,cos,pi
-import numpy as np
-
-G = np.array([[1],[1],[0]]) # the original vector
-R = [pi/3,pi/2,0] #Rs in (x,y,z) in radians to apply to G
-
-P = [np.array([[1,0,0],[0,cos(R[0]),sin(R[0])],[0,sin(R[0]),cos(R[0])]]),
-     np.array([[cos(R[1]),0,sin(R[1])],[0,1,0],[-sin(R[1]),0,cos(R[1])]]),
-     np.array([[cos(R[2]),-sin(R[2]),0],[sin(R[2]),cos(R[2]),0],[0,0,1]])]
-
-for Pa in P: #apply the rotations to the original vector
-    G = np.matmul(Pa,G)
-
-G = np.round(G,2) #round to simplify floats
-
-print(G)
 
 
 
-A = [np.array([[1],[2],[3]]),np.array([[3],[4],[5]])]
-A = np.asarray(A)
-A = np.sort(A,axis=0)
-print(list(A))
-
-B = [np.array([[3],[4],[5]]),np.array([[1],[2],[3]])]
-B = np.asarray(B)
-B = np.sort(B,axis=0)
-#print(list(B))
-
-print(A==B)
-
-
-
-"""
+"""z
