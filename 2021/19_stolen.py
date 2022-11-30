@@ -1,6 +1,9 @@
 
 from copy import deepcopy as dc
 from pathlib import Path
+from time import time
+
+t0 = time()
 
 
 fin = (Path(__file__).parent / "in/19.in")
@@ -56,3 +59,7 @@ while q:
         q.append(q.pop(0))
 
 print(len(t))
+
+################ Timing #################
+
+print("Time taken: %dms" % (1000 * (time() - t0)))
