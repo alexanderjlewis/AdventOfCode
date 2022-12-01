@@ -5,8 +5,8 @@ t0 = time()
 
 ################ Data Processing #################
 
-#fin = (Path(__file__).parent / "in/test/01.in") #(ANS1=24000,ANS2=45000)
-fin = (Path(__file__).parent / "in/01.in")
+fin = (Path(__file__).parent / "in/test/01.in") #(ANS1=24000,ANS2=)
+#fin = (Path(__file__).parent / "in/01.in")
 
 elves = []
 with open(fin, "r") as f:
