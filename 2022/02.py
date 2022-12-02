@@ -5,14 +5,14 @@ t0 = time()
 
 ################ Data Processing #################
 
-fin = (Path(__file__).parent / "in/test/01.in") #(ANS1=24000,ANS2=)
-#fin = (Path(__file__).parent / "in/01.in")
+#fin = (Path(__file__).parent / "in/test/02.in") #(ANS1=15,ANS2=12)
+fin = (Path(__file__).parent / "in/02.in")
 
-elves = []
+rounds = []
 with open(fin, "r") as f:
     data = f.read()   
-    for record in data.split("\n\n"):
-        elves.append([int(line) for line in record.splitlines()])
+    for record in data.split("\n"):
+        rounds.append(record.split(" "))
 
 ################ Common Function #################
 
@@ -21,15 +21,43 @@ with open(fin, "r") as f:
 
 ################ Part 1 #################
 
-calories_pef_elf = [sum(elf) for elf in elves]
+values = {"X":1,"Y":2,"Z":3}
+win = {"A":"Y","B":"Z","C":"X"}
+draw = {"A":"X","B":"Y","C":"Z"}
+lose = {"A":"Z","B":"X","C":"Y"}
 
-print('ans1:',max(calories_pef_elf))
+score = 0
+
+for round in rounds:
+    opp = round[0]
+    you = round[1]
+    if win[opp] == you:
+        score += 6
+    elif draw[opp] == you:
+        score += 3
+    score += values[you]
+
+print('ans1:',score)
 
 ################ Part 2 #################
 
-calories_pef_elf = sorted(calories_pef_elf)
+score = 0
 
-print('ans2:',sum(calories_pef_elf[-3:]))
+for round in rounds:
+    opp = round[0]
+    result  = round[1]
+    if result == "X": #need to loose
+        you = lose[opp]
+    elif result == "Y": #need to dtaw
+        you = draw[opp]
+        score += 3
+    else: #need to win
+        you = win[opp]
+        score += 6
+
+    score += values[you]
+
+print('ans2:',score)
 
 ################ Timing #################
 
