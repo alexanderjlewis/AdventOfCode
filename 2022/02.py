@@ -31,10 +31,12 @@ score = 0
 for round in rounds:
     opp = round[0]
     you = round[1]
+    
     if win[opp] == you:
         score += 6
     elif draw[opp] == you:
         score += 3
+    
     score += values[you]
 
 print('ans1:',score)
@@ -46,6 +48,7 @@ score = 0
 for round in rounds:
     opp = round[0]
     result  = round[1]
+    
     if result == "X": #need to loose
         you = lose[opp]
     elif result == "Y": #need to dtaw
