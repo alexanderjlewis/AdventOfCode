@@ -5,29 +5,34 @@ t0 = time()
 
 ################ Data Processing #################
 
-fin = (Path(__file__).parent / "in/test/06.in") #(ANS1=,ANS2=)
-#fin = (Path(__file__).parent / "in/06.in")
+#fin = (Path(__file__).parent / "in/test/06.in") #(ANS1=7,ANS2=19)
+fin = (Path(__file__).parent / "in/06.in")
 
-values = []
+datastream = []
 with open(fin, "r") as f:
-    data = f.read()   
+    datastream = (f.read())
     
 
 ################ Common Function #################
 
+def find_start(datastream,n):
+    counter = n
+    while True:
 
+        start = list(datastream[:n])
+        if len(set(start)) == n:
+            return counter
+
+        datastream = datastream[1:]
+        counter += 1
 
 ################ Part 1 #################
 
-
-
-print('ans1:',)
+print('ans1:',find_start(datastream,4))
 
 ################ Part 2 #################
 
-
-
-print('ans2:',)
+print('ans2:',find_start(datastream,14))
 
 ################ Timing #################
 
