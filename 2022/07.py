@@ -15,64 +15,60 @@ with open(fin, "r") as f:
 
 ################ Common Function #################
 
-def calc_dir_size():
+def calc_dir_size(dirs):
     
     value = 0
 
     while True:
-        current_command = commands.pop(0)
+        a,*b = commands.pop(0)
 
-        if current_command[0] == "$": #it's a commmand
-            if current_command[1] == "cd" and current_command[2] == "..":
+        if a == "$": #it's a commmand
+            if b[0] == "cd" and b[1] == "..":
                 
                 dirs.append(value)
                 break
 
-            elif current_command[1] == "cd": #this mean we are changing to a new directory
-                value += calc_dir_size()
-            
-            #note we can ignore an LS command - doesn't do anything on its own
+            elif b[0] == "cd": #this mean we are changing to a new directory
+                inner_value,dirs = calc_dir_size(dirs)
+                value += inner_value
+
+            else:   #means command is LS and we just move on
+                pass
     
         else: #it's a file or dir
 
-            if current_command[0] != "dir": #it's a file, so we add it's size on
-                value += int(current_command[0])
+            if a != "dir": #it's a file, so we add it's size on
+                value += int(a)
 
         if len(commands) == 0:
             dirs.append(value)
             break
 
-    return value
+    return value,dirs
 
 
 ################ Part 1 #################
 
 commands.pop(0) #remove the "$ cd /" at start of file
-dirs = []
-_ = calc_dir_size()
+_,dirs = calc_dir_size([])
 
-sum_over100k = 0
-for dir in dirs:
-    if dir <= 100000:
-        sum_over100k += dir
-
-print('ans1:',sum_over100k)
+print('ans1:',sum(dir for dir in dirs if dir <= 100000))
 
 ################ Part 2 #################
 
 free_space = 70000000 - max(dirs)
 extra_space_required = 30000000 - free_space
 
-delta = 70000000
-size = 0
+delta = free_space
+dir_size = 0
 
 for dir in dirs:
     if dir >= extra_space_required:
         if (dir-extra_space_required) < delta:
             delta = (dir-extra_space_required)
-            size = dir
+            dir_size = dir
 
-print('ans2:',size)
+print('ans2:',dir_size)
 
 ################ Timing #################
 
