@@ -6,7 +6,7 @@ t0 = time()
 
 ################ Data Processing #################
 
-fin = (Path(__file__).parent / "in/test/08.in") #(ANS1=21,ANS2=)
+#fin = (Path(__file__).parent / "in/test/08.in") #(ANS1=21,ANS2=8)
 fin = (Path(__file__).parent / "in/08.in")
 
 grid = []
@@ -20,14 +20,18 @@ width,height = len(grid[0]), len(grid)
 
 def check_row(i,grid,grid_seen):
 
+    #first and last are always visible
     grid_seen[i][0] = "#"
+    grid_seen[i][-1] = "#"
+
+
     max_h = grid[i][0]
     for j in range(1,width):
         if grid[i][j] > max_h:
             grid_seen[i][j] = "#"
             max_h = grid[i][j]
 
-    grid_seen[i][width-1] = "#"
+    
     max_h = grid[i][width-1]
     for j in range(width-2,0,-1):
         if grid[i][j] > max_h:
