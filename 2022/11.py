@@ -86,6 +86,7 @@ actions = deepcopy(actions_org)
 rounds = 10000
 inspections = [0] * number_monkeys
 
+# find lowest common multiple of the divisors so this can be used to keep the size of the worry factor in check
 lcm = 1
 for val in test_vals:
     lcm *= val
