@@ -5,8 +5,8 @@ t0 = time()
 
 ################ Data Processing #################
 
-fin = (Path(__file__).parent / "in/test/2023.in") #(ANS1=,ANS2=)
-#fin = (Path(__file__).parent / "in/2023.in")
+fin = (Path(__file__).parent / "in/test/25.in") #(ANS1=,ANS2=)
+#fin = (Path(__file__).parent / "in/25.in")
 
 values = []
 with open(fin, "r") as f:

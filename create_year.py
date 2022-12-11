@@ -37,6 +37,6 @@ with open(fin, "r") as f1:
             pass    
         
         with open(Path(__file__).parent / year / (f"{i:02}" + '.py'), 'w') as f2:
-            f2.write(data.replace("<YEAR>",year))
+            f2.write(data.replace("<YEAR>",f"{i:02}"))
 
 
