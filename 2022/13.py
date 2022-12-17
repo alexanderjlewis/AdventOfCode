@@ -1,17 +1,18 @@
 from pathlib import Path
 from time import time
+from copy import deepcopy
 
 t0 = time()
 
 ################ Data Processing #################
 
-fin = (Path(__file__).parent / "in/test/13.in") #(ANS1=12,ANS2=)
-#fin = (Path(__file__).parent / "in/13.in")
+fin = (Path(__file__).parent / "in/test/13.in") #(ANS1=13,ANS2=140)
+fin = (Path(__file__).parent / "in/13.in")
 
 pairs = []
 with open(fin, "r") as f:
     data = f.read().split("\n\n")
-    for x in data:
+    for i,x in enumerate(data):
         a,b = x.split("\n")
         a = eval(a)
         b = eval(b)
@@ -19,72 +20,97 @@ with open(fin, "r") as f:
 
 ################ Common Function #################
 
-def compare_items(l,r):
-    if type(l) == int and type(r) == int:
-        if l == r:
-            left.pop(0)
-            right.pop(0)
-            print('l=r')
-        elif l < r:
-            correct_indexes.append(i+1)
+def compare_items(left,right):
+
+    while True:
+        
+        l = None
+        r = None
+
+        if len(left) == 0 and len(right) == 0:
+            return None
+        if len(left) > 0:
+            l = left.pop(0)
+        else:
             return True
+
+        if len(right) > 0:
+            r = right.pop(0)
         else:
             return False
-    
-    elif type(l) == list and type(r) == list:
-        return False
 
-    elif type(l) == int:
-        l = [l]
-        return False
+        if type(l) == int and type(r) == int:
+            if l == r:
+                next
+            elif l < r:
+                return True
+            else:
+                return False
+        
+        elif type(l) == list and type(r) == list:
+            result = compare_items(l,r)
+            if result == None:
+                next
+            else:
+                return result
 
-    elif type(r) == int:
-        r = [r]
-        return False
+        elif type(l) == int:
+            l = [l]
+            result = compare_items(l,r)
+            if result == None:
+                next
+            else:
+                return result
+
+        elif type(r) == int:
+            r = [r]
+            result = compare_items(l,r)
+            if result == None:
+                next
+            else:
+                return result
 
 ################ Part 1 #################
 
 correct_indexes = []
 
-for i in range(len(pairs)):
+pairs_1 = deepcopy(pairs)
 
-    left,right = pairs[i]
+for i in range(len(pairs_1)):
 
-    while True:     
-        
-        l = None
-        r = None
-        print(i)
-        
-        if len(left) > 0:
-            l = left[0]
-        else:
-            correct_indexes.append(i+1)
-            break
+    left,right = pairs_1[i]
 
-        if len(right) > 0:
-            r = right[0]
-        else:
-            break
-  
-        result = compare_items(l,r)
-        
+    if compare_items(left,right):
+        correct_indexes.append(i+1)
 
-        
-
-        print(l,r)
-    i += 1
-        
-
-print('corr:',correct_indexes)
-
-print('ans1:',)
+print('ans1:',sum(correct_indexes))
 
 ################ Part 2 #################
 
+lines = []
+for a,b in pairs:
+    lines.append(a)
+    lines.append(b)
 
+additional_vals = [[[2]],[[6]]]
+lines.extend(additional_vals)
 
-print('ans2:',)
+sorted_lines = []
+
+for i in range(len(lines)):
+    base_index = i
+
+    for j in range(i+1,len(lines)):
+        result = compare_items(deepcopy(lines[base_index]),deepcopy(lines[j]))
+        if not result:
+            base_index = j
+
+    lines.insert(i,lines.pop(base_index))
+
+a = lines.index([[2]]) + 1
+b = lines.index([[6]]) + 1
+
+print('ans2:', a * b)
 
 ################ Timing #################
 
