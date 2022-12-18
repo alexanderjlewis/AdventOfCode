@@ -6,14 +6,22 @@ t0 = time()
 
 ################ Data Processing #################
 
-fin = (Path(__file__).parent / "in/test/15.in") #(ANS1=26,ANS2=)
-fin = (Path(__file__).parent / "in/15.in")
+fin = (Path(__file__).parent / "in/test/15.in") #(ANS1=26,ANS2=56000011)
+#fin = (Path(__file__).parent / "in/15.in")
 
-input_data = []
+sensors = []
+taken = []
+
 with open(fin, "r") as f:
     data = f.read().replace("Sensor at x=","").replace(" y=","").replace(": closest beacon is at x=",",").replace(", y=","")
     data = data.split("\n")
-    input_data = [x.split(",") for x in data]
+    data = [x.split(",") for x in data]
+    for row in data:
+        sx,sy,bx,by = map(int,row)
+        d = abs(sx-bx) + abs(sy-by)
+        sensors.append(tuple([sx,sy,d]))
+        taken.append(tuple([bx,by]))
+        taken.append(tuple([sx,sy]))
 
 y_val = 10
 y_val = 2000000
@@ -35,50 +43,15 @@ def all_coords_in_dist(base,dist):
 
 ################ Part 1 #################
 
-taken = set()
-beacons = set()
+min_y = min(taken)[1]
+max_y = max(taken)[1]
 
-for row in input_data:
-    sx,sy,bx,by = map(int,row)
-
-    taken.add(tuple([sx,sy]))
-    beacons.add(tuple([bx,by]))
-    
-    man_dist = abs(sx-bx) + abs(sy-by)
-
-    print(row,man_dist)
-    if man_dist > 0:
-        all_coords_in_dist([sx,sy],man_dist)
-
-count = 0
-
-for item in taken:
-    x,y = item
-    if y == y_val:
-        count += 1
-
-for item in beacons:
-    x,y = item
-    if y == y_val:
-        count -= 1
-
-print('ans1:',count)
-
-################ Part 2 #################
+print(min_y,max_y)
 '''
-taken = set()
-beacons = set()
-
-for row in input_data:
-    sx,sy,bx,by = map(int,row)
-
-    taken.add(tuple([sx,sy]))
-    beacons.add(tuple([bx,by]))
-    
-    man_dist = abs(sx-bx) + abs(sy-by)
+for sensor in sensors:
+    sx,sy,d = sensors
 
     if man_dist > 0:
-
         all_coords_in_dist([sx,sy],man_dist)
 
 count = 0
@@ -92,6 +65,11 @@ for item in beacons:
     x,y = item
     if y == y_val:
         count -= 1'''
+
+print('ans1:',count)
+
+################ Part 2 #################
+
 
 print('ans2:',)
 
