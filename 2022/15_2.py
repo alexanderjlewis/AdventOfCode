@@ -7,7 +7,7 @@ t0 = time()
 ################ Data Processing #################
 
 fin = (Path(__file__).parent / "in/test/15.in") #(ANS1=26,ANS2=56000011)
-fin = (Path(__file__).parent / "in/15.in")
+#fin = (Path(__file__).parent / "in/15.in")
 
 sensors = []
 beacons = []
@@ -23,7 +23,7 @@ with open(fin, "r") as f:
         beacons.append(tuple([bx,by]))
 
 y_val = 10
-y_val = 2000000
+#y_val = 2000000
 
 ################ Common Function #################
 
@@ -48,8 +48,38 @@ print('ans1:',count)
 
 ################ Part 2 #################
 
+dirs = [(1,1),(-1,1),(1,-1),(-1,-1)]
+ 
+for sx,sy,d in sensors:
 
-print('ans2:',)
+    for i in range(d+2):
+        
+        for x_sign,y_sign in dirs:
+            x_off = i * x_sign
+            y_off = (d - i) * y_sign
+
+            tx,ty = sx+x_off, sy+y_off
+
+            intersected = False
+
+            if (0<=tx<=4_000_000) and (0<=ty<=4_000_000):
+                for sx2, sy2, d2 in sensors:
+                    if (abs(sx2-tx) + abs(sy2-ty)) <= d:
+                        intersected = True
+
+            if not intersected:
+                break
+        
+        if not intersected:
+                break
+    
+    if not intersected:
+                break
+        
+print(tx,ty)
+
+
+print('ans2:',(tx*4_000_000)+ty)
 
 ################ Timing #################
 
