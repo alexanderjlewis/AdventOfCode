@@ -1,5 +1,6 @@
 from pathlib import Path
 from time import time
+import itertools
 
 t0 = time()
 
@@ -17,6 +18,7 @@ replace = [
 ]
 
 instr = {}
+non_zero_flows = []
 
 with open(fin, "r") as f:
     data = f.read()
@@ -28,16 +30,13 @@ with open(fin, "r") as f:
         _,a,b,*c = line.split(',')
         instr[a] = (int(b),c)
 
-non_zero_flow = []
-
-for inst in instr:
-    flow,tunnels = instr[inst]
-    if flow > 0:
-        non_zero_flow.append(inst)
+        if int(b) > 0:
+            non_zero_flows.append(a)
+       
 
 ################ Common Function #################
 
-print(non_zero_flow)
+print(non_zero_flows)
 
     
 
@@ -48,34 +47,6 @@ queue = {}
 
 start = 'AA'
 
-def simulate(t,pos,pressure_released,opened):
-    print('t',t)
-    if t > 30:
-        max_pressure_released.append(pressure_released)
-        print(pressure_released)
-        return
-
-
-    flow, tunnels = instr[pos]
-    t += 1
-
-    for tunnel in tunnels:
-        print('sim',tunnel)
-        simulate(t,tunnel,pressure_released,opened)
-        
-
-        return
-
-        
-    if flow > 0 and pos not in opened:
-        t += 1
-        pressure_released += ( flow * (30 - t))
-        opened.append(pos)
-    
-    for tunnel in tunnels:
-        simulate(t,tunnel,pressure_released,opened)
-
-simulate(0,start,0,[])
 
 print('ans1:',max(max_pressure_released))
 
